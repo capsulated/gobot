@@ -74,8 +74,9 @@ func (p *Processor) ParseRequest(response *CandleResponse) {
 	}
 	p.Log.Infof("[%s] Candle: %s-%s, OpenPrice: %s, ClosePrice: %s, isClosed: %s",
 		time.Now().Format("15:04:05"),
-		time.UnixMilli(response.Candle.KlineStartTime).Format("15:04:05"),
-		time.UnixMilli(response.Candle.KlineCloseTime).Format("15:04:05"),
+		// todo check and fix
+		time.Unix(response.Candle.KlineStartTime, 100).Format("15:04:05"),
+		time.Unix(response.Candle.KlineCloseTime, 100).Format("15:04:05"),
 		response.Candle.OpenPrice,
 		response.Candle.ClosePrice,
 		isClosed,
