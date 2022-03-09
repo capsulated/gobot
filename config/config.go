@@ -60,7 +60,7 @@ func NewConfig() *Config {
 	}
 
 	server := &Server{
-		Host: "127.0.0.1",
+		Host: "",
 		Port: "3000",
 	}
 
