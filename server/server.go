@@ -35,6 +35,7 @@ func NewServer(log *logrus.Logger, telega *telegabot.TelegaApi, config *config.C
 func (s *Server) ListenAndServe() error {
 	var g errgroup.Group
 
+	s.Log.Info("Starting web-server...")
 	g.Go(func() error {
 		return fasthttp.ListenAndServe(s.Host+":"+s.Port, s.Router.Handler)
 	})
