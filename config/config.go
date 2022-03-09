@@ -16,9 +16,21 @@ type BinanceSocket struct {
 	Path      string
 }
 
+type Telega struct {
+	ApiToken string
+	Debug    bool
+}
+
+type Server struct {
+	Host string
+	Port string
+}
+
 type Config struct {
 	Logger        *Logger
+	Telega        *Telega
 	BinanceSocket *BinanceSocket
+	Server        *Server
 }
 
 // NewConfig todo add all from env
@@ -37,8 +49,25 @@ func NewConfig() *Config {
 		Path:      "/ws",
 	}
 
+	telegramDebug := os.Getenv("TELEGRAM_DEBUG")
+	var debug bool
+	if telegramDebug == "true" {
+		debug = true
+	}
+	telega := &Telega{
+		ApiToken: os.Getenv("TELEGRAM_APITOKEN"),
+		Debug:    debug,
+	}
+
+	server := &Server{
+		Host: "127.0.0.1",
+		Port: "3000",
+	}
+
 	return &Config{
 		Logger:        logger,
 		BinanceSocket: binanceSocket,
+		Telega:        telega,
+		Server:        server,
 	}
 }

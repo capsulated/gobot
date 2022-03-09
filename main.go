@@ -6,14 +6,14 @@ import (
 	"github.com/sirupsen/logrus"
 	"gobot/config"
 	"gobot/exchanges"
-	"gobot/workers"
+	"gobot/server"
+	"gobot/telegram"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 )
 
-//
 func main() {
 	log := logrus.New()
 
@@ -25,12 +25,23 @@ func main() {
 		log.Fatalf("Cannot connect to web-socket: %s", err)
 	}
 	defer socketBinance.Close()
+	//socketBinance.RestGet2hoursPairData()
 
-	socketBinance.RestGet2hoursPairData()
+	telega, err := telegabot.NewTelegaBot(log, configuration)
+	if err != nil {
+		log.Fatalf("Cannot create telega bot: %s", err)
+	}
 
-	processor := workers.NewProcessor(socketBinance, log)
+	srv := server.NewServer(log, telega, configuration)
+	err = srv.ListenAndServe()
+	if err != nil {
+		log.Fatalf("Cannot create server: %s", err)
+	}
 
-	go processor.Reading()
+	// NewServer
+	// processor := workers.NewProcessor(socketBinance, log)
+
+	// go processor.Reading()
 
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, os.Interrupt, os.Kill, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGABRT)
