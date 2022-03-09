@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gorilla/websocket"
-	_ "github.com/joho/godotenv/autoload"
+	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 	"gobot/config"
 	"gobot/exchanges"
@@ -15,18 +15,28 @@ import (
 )
 
 func main() {
+	// Logger
 	log := logrus.New()
 
+	// Env
+	err := godotenv.Load()
+	if err != nil {
+		log.Error("Error loading .env file")
+	}
+
+	// Config
 	configuration := config.NewConfig()
 
+	//Socket
 	socketBinance := exchanges.NewSocketBinance(log, configuration)
-	err := socketBinance.Connect()
+	err = socketBinance.Connect()
 	if err != nil {
 		log.Fatalf("Cannot connect to web-socket: %s", err)
 	}
 	defer socketBinance.Close()
 	//socketBinance.RestGet2hoursPairData()
 
+	// Telega
 	telega, err := telegabot.NewTelegaBot(log, configuration)
 	if err != nil {
 		log.Fatalf("Cannot create telega bot: %s", err)
