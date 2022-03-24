@@ -39,7 +39,7 @@ func (s *Server) ListenAndServe() error {
 	g.Go(func() error {
 		return fasthttp.ListenAndServe(s.Host+":"+s.Port, s.Router.Handler)
 	})
-	s.Log.Info("Server started!")
+	s.Log.Info("Server started!" + s.Host + ":" + s.Port)
 
 	return g.Wait()
 }

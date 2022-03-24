@@ -60,8 +60,8 @@ func NewConfig() *Config {
 	}
 
 	server := &Server{
-		Host: "",
-		Port: os.Getenv("PORT"),
+		Host: os.Getenv("SERVER_HOST"),
+		Port: os.Getenv("SERVER_PORT"),
 	}
 
 	return &Config{

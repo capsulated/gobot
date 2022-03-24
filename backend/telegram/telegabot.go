@@ -26,6 +26,8 @@ func NewTelegaBot(log *logrus.Logger, config *config.Config) (*TelegaApi, error)
 		Log: log,
 	}
 
+	t.Chats = append(t.Chats, -1001771210076)
+
 	go t.processMessages()
 	t.Log.Infof("Telegram bot %s connected!", bot.Self.UserName)
 
